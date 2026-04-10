@@ -1,44 +1,59 @@
 # 設定リファレンス
 
-<!-- ツール名: {ツール名} -->
-
-## 設定ファイル（config.yaml）
-
-```yaml
-# アプリケーション設定
-app:
-  name: "{ツール名}"
-  port: 3000
-  log_level: "info"  # debug | info | warn | error
-
-# データベース設定
-database:
-  host: "localhost"
-  port: 5432
-  name: "{db_name}"
-  pool_size: 10
-
-# 外部サービス設定
-external:
-  api_url: "https://api.example.com"
-  timeout: 30  # 秒
-```
+<!-- ガイド: このドキュメントは環境変数・設定ファイル・フィーチャーフラグなど、ツールの挙動を制御するすべての設定値の全量リファレンスです。漏れなく記載してください。 -->
 
 ## 環境変数
 
-| 変数名 | 型 | デフォルト値 | 必須 | 説明 |
+<!-- ガイド: すべての環境変数を表に記載してください。秘密情報（トークン、パスワード等）は「秘密情報」セクションに分離してください。 -->
+
+| キー名 | 型 | デフォルト値 | 必須 | 説明 |
 |---|---|---|---|---|
-| `APP_PORT` | number | `3000` | No | アプリケーションのポート番号 |
-| `DATABASE_URL` | string | - | Yes | データベース接続URL |
-| `API_KEY` | string | - | Yes | 外部API認証キー |
-| `LOG_LEVEL` | string | `info` | No | ログ出力レベル |
-| `NODE_ENV` | string | `development` | No | 実行環境 |
+| `{ENV_VAR_1: 例 APP_PORT}` | `number` | `3000` | No | {説明: 例 アプリケーションのリッスンポート} |
+| `{ENV_VAR_2: 例 LOG_LEVEL}` | `string` | `info` | No | {説明: 例 ログ出力レベル（debug / info / warn / error）} |
+| `{ENV_VAR_3: 例 DATABASE_HOST}` | `string` | `localhost` | Yes | {説明: 例 データベースのホスト名} |
 
 ## 秘密情報
 
-以下の値はシークレットとして管理し、ソースコードにハードコードしないでください。
+<!-- ガイド: シークレットとして管理すべき値を記載してください。値そのものはここに書かず、管理場所を明記してください。 -->
 
-| 変数名 | 管理場所 | 説明 |
+| キー名 | 型 | 必須 | 管理場所 | 説明 |
+|---|---|---|---|---|
+| `{SECRET_1: 例 DATABASE_URL}` | `string` | Yes | {管理場所: 例 AWS Secrets Manager} | {説明: 例 DB 接続文字列} |
+| `{SECRET_2: 例 API_KEY}` | `string` | Yes | {管理場所: 例 Azure Key Vault} | {説明: 例 外部 API 認証キー} |
+
+## 設定ファイル（YAML）
+
+<!-- ガイド: YAML 等の設定ファイルを使用する場合、サンプルと各キーの説明を記載してください。設定ファイルが無い場合はこのセクションを「N/A」としてください。 -->
+
+```yaml
+# {設定ファイルパス: 例 config/default.yaml}
+
+app:
+  name: "{ツール名}"           # アプリケーション名
+  port: 3000                   # リッスンポート
+
+database:
+  host: "localhost"            # DB ホスト
+  port: 5432                   # DB ポート
+  name: "{DB名}"               # DB 名
+  pool_size: 10                # コネクションプール数
+
+# {その他のセクションを追加}
+```
+
+| キー | 型 | デフォルト値 | 必須 | 説明 |
+|---|---|---|---|---|
+| `app.name` | `string` | - | Yes | {説明} |
+| `app.port` | `number` | `3000` | No | {説明} |
+| `database.host` | `string` | `localhost` | Yes | {説明} |
+| `database.port` | `number` | `5432` | No | {説明} |
+| `database.name` | `string` | - | Yes | {説明} |
+| `database.pool_size` | `number` | `10` | No | {説明} |
+
+## フィーチャーフラグ
+
+<!-- ガイド: フィーチャーフラグを使用している場合に記載してください。使用していない場合は「N/A」としてください。 -->
+
+| フラグ名 | デフォルト | 説明 |
 |---|---|---|
-| `DATABASE_URL` | AWS Secrets Manager / Azure Key Vault | DB接続文字列 |
-| `API_KEY` | AWS Secrets Manager / Azure Key Vault | 外部API認証キー |
+| `{FLAG_1: 例 ENABLE_NEW_UI}` | `false` | {説明: 例 新UIを有効化する} |

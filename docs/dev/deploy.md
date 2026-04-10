@@ -1,71 +1,87 @@
-# デプロイ
+# デプロイ手順
 
-<!-- ツール名: {ツール名} -->
+<!-- ガイド: ビルドからデプロイ、ロールバックまでの手順をステップ形式で記載してください。環境ごとに手順が異なる場合はセクションを分けてください。 -->
 
-## デプロイ環境
+## デプロイ環境一覧
 
-| 環境 | 用途 | URL |
-|---|---|---|
-| development | 開発・検証 | `https://dev.example.com` |
-| staging | ステージング | `https://stg.example.com` |
-| production | 本番 | `https://example.com` |
+| 環境 | 用途 | デプロイ先 | URL |
+|---|---|---|---|
+| development | 開発・動作検証 | {デプロイ先: 例 AWS dev アカウント} | `{URL: 例 https://dev.example.com}` |
+| staging | リリース前検証 | {デプロイ先: 例 AWS stg アカウント} | `{URL: 例 https://stg.example.com}` |
+| production | 本番 | {デプロイ先: 例 AWS prod アカウント} | `{URL: 例 https://example.com}` |
+
+## 必要な権限
+
+<!-- ガイド: デプロイを実行するために必要な IAM ロール / サービスプリンシパル / アクセス権限を明記してください。 -->
+
+| 操作 | 必要な権限 |
+|---|---|
+| {操作: 例 ビルド・デプロイ} | {権限: 例 IAM ロール `deploy-role` の AssumeRole 権限} |
+| {操作: 例 インフラ変更} | {権限: 例 Terraform 用 IAM ロール} |
+| {操作: 例 シークレット参照} | {権限: 例 Secrets Manager の Read 権限} |
+
+## ビルド
+
+```bash
+# 1. 依存関係のインストール
+{インストールコマンド: 例 npm ci}
+
+# 2. テスト実行
+{テストコマンド: 例 npm test}
+
+# 3. ビルド
+{ビルドコマンド: 例 npm run build}
+```
 
 ## デプロイ手順
 
-### 1. 事前準備
+### staging 環境
 
 ```bash
-# 最新のコードを取得
-git checkout main
-git pull origin main
+# 1. staging ブランチにマージ / プッシュ
+{手順}
 
-# テストを実行
-npm test
+# 2. インフラ変更がある場合
+{IaC コマンド: 例 terraform plan -var-file=staging.tfvars}
+{IaC コマンド: 例 terraform apply -var-file=staging.tfvars}
 
-# ビルド
-npm run build
+# 3. アプリケーションデプロイ
+{デプロイコマンド: 例 npm run deploy:staging}
+
+# 4. 動作確認
+{確認コマンド: 例 curl https://stg.example.com/health}
 ```
 
-### 2. ステージング環境へのデプロイ
+### production 環境
+
+<!-- ガイド: 本番デプロイは CI/CD で自動化されている場合はそのトリガー条件を記載してください。手動の場合はコマンドを記載してください。 -->
 
 ```bash
-# Terraform / IaC でインフラを更新（必要な場合）
-cd infra/
-terraform plan -var-file=staging.tfvars
-terraform apply -var-file=staging.tfvars
-
-# アプリケーションをデプロイ
-npm run deploy:staging
-```
-
-### 3. 本番環境へのデプロイ
-
-```bash
-# リリースタグを作成
+# 1. リリースタグを作成
 git tag -a v{X.Y.Z} -m "Release v{X.Y.Z}"
 git push origin v{X.Y.Z}
 
-# 本番デプロイ（CI/CD パイプラインが自動実行）
-# または手動デプロイ:
-npm run deploy:production
-```
+# 2. デプロイ実行（CI/CD 自動 or 手動）
+{デプロイコマンド}
 
-### 4. デプロイ後の確認
-
-```bash
-# ヘルスチェック
-curl https://example.com/health
-
-# ログの確認
+# 3. デプロイ後の確認
+{確認コマンド: 例 curl https://example.com/health}
 {ログ確認コマンド}
 ```
 
 ## ロールバック手順
 
+<!-- ガイド: デプロイ後に問題が発生した場合のロールバック手順を必ず記載してください。 -->
+
 ```bash
 # 直前のバージョンに戻す
-npm run deploy:rollback
+{ロールバックコマンド}
 
 # 特定のバージョンに戻す
-npm run deploy:rollback -- --version v{X.Y.Z}
+{ロールバックコマンド: 例 npm run deploy:rollback -- --version v{X.Y.Z}}
 ```
+
+**ロールバック時の注意点**:
+
+- {注意点1: 例 DB マイグレーションを伴うリリースでは手動でのロールバックが必要}
+- {注意点2}
