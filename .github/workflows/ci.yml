@@ -1,0 +1,29 @@
+# CI パイプライン
+#
+# ガイド: プルリクエスト・プッシュ時に実行するテスト・リント・ビルドを定義してください。
+#   不要なステップは削除して構いません。
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # ガイド: 使用する言語・ランタイムに合わせて変更してください
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "npm"
+
+      - run: npm ci
+      - run: npm run lint
+      - run: npm test
+      - run: npm run build

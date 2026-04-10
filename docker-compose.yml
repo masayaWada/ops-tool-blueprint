@@ -1,0 +1,24 @@
+# ガイド: ローカル開発で必要な外部サービス（DB、キャッシュ等）を定義してください。
+#   不要なサービスは削除して構いません。
+
+services:
+  # 例: PostgreSQL
+  # db:
+  #   image: postgres:16-alpine
+  #   ports:
+  #     - "5432:5432"
+  #   environment:
+  #     POSTGRES_USER: "{ユーザー名}"
+  #     POSTGRES_PASSWORD: "{パスワード}"
+  #     POSTGRES_DB: "{DB名}"
+  #   volumes:
+  #     - db-data:/var/lib/postgresql/data
+
+  # 例: Redis
+  # redis:
+  #   image: redis:7-alpine
+  #   ports:
+  #     - "6379:6379"
+
+# volumes:
+#   db-data:

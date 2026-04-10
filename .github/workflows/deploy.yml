@@ -1,0 +1,41 @@
+# デプロイパイプライン
+#
+# ガイド: リリースタグ作成時に自動デプロイするワークフローです。
+#   デプロイ先やデプロイコマンドをツールに合わせて変更してください。
+
+name: Deploy
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    # ガイド: 環境保護ルール（承認者の設定等）を使う場合は environment を指定してください
+    # environment: production
+
+    permissions:
+      id-token: write   # OIDC 認証で AWS / Azure にアクセスする場合
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "npm"
+
+      - run: npm ci
+      - run: npm run build
+
+      # ガイド: AWS の場合 — OIDC で AssumeRole
+      # - uses: aws-actions/configure-aws-credentials@v4
+      #   with:
+      #     role-to-assume: arn:aws:iam::{アカウントID}:role/{ロール名}
+      #     aws-region: ap-northeast-1
+
+      # ガイド: デプロイコマンドを記述してください
+      # - run: npm run deploy:production
